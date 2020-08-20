@@ -1,28 +1,49 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div class="container">
+        <appHeader :quoteCount="quotes.length" :maxQuotes="maxQuotes"></appHeader>
+        <appQuoteGrid @quoteDeleted="deleteQuote" :quotes="quotes"></appQuoteGrid>
+        <appNewQuote @quoteAdded="newQuote"></appNewQuote>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <div
+                    class="alert alert-warning my-3"
+                    v-if="quotes.length >= maxQuotes"
+                >
+                    Maximum amount of quotes reached.
+                </div>
+                <div class="alert alert-info mt-3"> Click on a Quote to remove it </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+import QuoteGrid from "./components/QuoteGrid.vue"
+import NewQuote from "./components/NewQuote.vue"
+import Header from "./components/Header.vue"
+    export default {
+        components: { appHeader: Header, appQuoteGrid: QuoteGrid, appNewQuote: NewQuote },
+        data: () => ({
+            quotes: [ "Life Before Death"],
+            maxQuotes: 10,
+        }),
+        methods: {
+            newQuote(quote){
+                if(this.quotes.length >= 10) {
+                    alert("Maximum quotes reached.");
+                    return
+                } else if(quote.length == 0) {
+                    alert("Quote cannot be empty.")
+                    return
+                }
+                this.quotes.push(quote);
+            },
+            deleteQuote(index){
+                this.quotes.splice(index, 1);
+            }
+        }
+    }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
